@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 235 40% 8%;
+    --foreground: 0 0% 94%;
+
+    --card: 235 30% 14%;
+    --card-foreground: 0 0% 94%;
+
+    --popover: 235 30% 14%;
+    --popover-foreground: 0 0% 94%;
+
+    --primary: 244 60% 68%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 190 100% 50%;
+    --secondary-foreground: 235 40% 8%;
+
+    --muted: 235 20% 20%;
+    --muted-foreground: 240 15% 60%;
+
+    --accent: 244 60% 68%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 0 0% 100% / 0.08;
+    --input: 0 0% 100% / 0.08;
+    --ring: 244 60% 68%;
+
+    --radius: 1rem;
+
+    --sidebar-background: 235 40% 8%;
+    --sidebar-foreground: 0 0% 94%;
+    --sidebar-primary: 244 60% 68%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 235 30% 14%;
+    --sidebar-accent-foreground: 0 0% 94%;
+    --sidebar-border: 0 0% 100% / 0.08;
+    --sidebar-ring: 244 60% 68%;
+
+    --glass-bg: rgba(26, 26, 46, 0.55);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glow-primary: rgba(108, 99, 255, 0.15);
+    --glow-secondary: rgba(0, 212, 255, 0.15);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 20px var(--glow-primary), 0 0 60px var(--glow-primary);
+  }
+
+  .glow-secondary {
+    box-shadow: 0 0 20px var(--glow-secondary);
+  }
+
+  .gradient-bg {
+    background: linear-gradient(180deg, hsl(235 40% 8%) 0%, hsl(235 30% 14%) 100%);
+  }
+}
+
+/* Subtle grid background */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(108, 99, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108, 99, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Profile photo glow ring */
+@keyframes pulse-ring {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(108, 99, 255, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(108, 99, 255, 0); }
+}
+
+.pulse-ring {
+  animation: pulse-ring 3s ease-in-out infinite;
+}
+
+/* Instagram gradient */
+.instagram-gradient {
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
