@@ -12,7 +12,9 @@
     "skipLibCheck": true,
     "strictNullChecks": false
   },
-  "files": [],
+  "files": [
+    "src/vite-env.d.ts"
+  ],
   "references": [
     {
       "path": "./tsconfig.app.json"

@@ -1,0 +1,76 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  GCP_PROJECT_ID: desenvolvimento-lenon
+  GCP_REGION: us-central1
+  CLOUD_RUN_SERVICE: portfolio-lenon
+  ARTIFACT_REPO: cloud-run
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Auth to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
+
+      - name: Ensure Artifact Registry repo exists
+        run: |
+          set -euo pipefail
+          if ! gcloud artifacts repositories describe "${ARTIFACT_REPO}" --location "${GCP_REGION}" >/dev/null 2>&1; then
+            gcloud artifacts repositories create "${ARTIFACT_REPO}" \
+              --repository-format=docker \
+              --location "${GCP_REGION}" \
+              --description "Docker images for Cloud Run"
+          fi
+
+      - name: Build and push image
+        env:
+          VITE_EMAILJS_PUBLIC_KEY: ${{ vars.VITE_EMAILJS_PUBLIC_KEY || 'HohWLELMkH1nkYmSO' }}
+          VITE_EMAILJS_SERVICE_ID: ${{ vars.VITE_EMAILJS_SERVICE_ID || 'service_y19gxjf' }}
+          VITE_EMAILJS_TEMPLATE_ID: ${{ vars.VITE_EMAILJS_TEMPLATE_ID || 'template_uvqief8' }}
+        run: |
+          set -euo pipefail
+          IMAGE_URI="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${ARTIFACT_REPO}/${CLOUD_RUN_SERVICE}:${GITHUB_SHA}"
+
+          docker build \
+            --build-arg VITE_EMAILJS_PUBLIC_KEY="${VITE_EMAILJS_PUBLIC_KEY}" \
+            --build-arg VITE_EMAILJS_SERVICE_ID="${VITE_EMAILJS_SERVICE_ID}" \
+            --build-arg VITE_EMAILJS_TEMPLATE_ID="${VITE_EMAILJS_TEMPLATE_ID}" \
+            -t "${IMAGE_URI}" .
+
+          docker push "${IMAGE_URI}"
+          echo "IMAGE_URI=${IMAGE_URI}" >> "$GITHUB_ENV"
+
+      - name: Deploy to Cloud Run
+        run: |
+          set -euo pipefail
+          gcloud run deploy "${CLOUD_RUN_SERVICE}" \
+            --image "${IMAGE_URI}" \
+            --region "${GCP_REGION}" \
+            --platform managed \
+            --allow-unauthenticated \
+            --port 8080 \
+            --cpu 1 \
+            --memory 512Mi \
+            --min-instances 0 \
+            --max-instances 1 \
+            --ingress all

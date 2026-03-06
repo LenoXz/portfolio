@@ -20,6 +20,11 @@ const ContactForm = () => {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const viteEnv = ((import.meta as unknown as { env?: Record<string, string> }).env ?? {}) as Record<string, string>;
+  const emailJsServiceId = viteEnv.VITE_EMAILJS_SERVICE_ID || "service_y19gxjf";
+  const emailJsTemplateId = viteEnv.VITE_EMAILJS_TEMPLATE_ID || "template_uvqief8";
+  const emailJsPublicKey = viteEnv.VITE_EMAILJS_PUBLIC_KEY || "HohWLELMkH1nkYmSO";
+
   const {
     register,
     handleSubmit,
@@ -30,16 +35,15 @@ const ContactForm = () => {
     setLoading(true);
     try {
       await emailjs.send(
-        // TODO: Replace with your actual EmailJS credentials
-        "service_y19gxjf",
-        "template_uvqief8",
+        emailJsServiceId,
+        emailJsTemplateId,
         {
           from_name: data.name,
           from_email: data.email,
           subject: data.subject,
           message: data.message,
         },
-        "HohWLELMkH1nkYmSO",
+        emailJsPublicKey,
       );
       setSent(true);
     } catch {
