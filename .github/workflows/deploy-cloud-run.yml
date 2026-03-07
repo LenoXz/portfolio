@@ -5,10 +5,10 @@ on:
     branches: ["main"]
 
 env:
-  GCP_PROJECT_ID: desenvolvimento-lenon
-  GCP_REGION: us-central1
-  CLOUD_RUN_SERVICE: portfolio-lenon
-  ARTIFACT_REPO: cloud-run
+    GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+    GCP_REGION: ${{ secrets.GCP_REGION }}
+    CLOUD_RUN_SERVICE: ${{ secrets.CLOUD_RUN_SERVICE }}
+    ARTIFACT_REPO: ${{ secrets.ARTIFACT_REPO }}
 
 jobs:
   deploy:
@@ -44,9 +44,9 @@ jobs:
 
       - name: Build and push image
         env:
-          VITE_EMAILJS_PUBLIC_KEY: ${{ vars.VITE_EMAILJS_PUBLIC_KEY || 'HohWLELMkH1nkYmSO' }}
-          VITE_EMAILJS_SERVICE_ID: ${{ vars.VITE_EMAILJS_SERVICE_ID || 'service_y19gxjf' }}
-          VITE_EMAILJS_TEMPLATE_ID: ${{ vars.VITE_EMAILJS_TEMPLATE_ID || 'template_uvqief8' }}
+          VITE_EMAILJS_PUBLIC_KEY: ${{ vars.VITE_EMAILJS_PUBLIC_KEY }}
+          VITE_EMAILJS_SERVICE_ID: ${{ vars.VITE_EMAILJS_SERVICE_ID }}
+          VITE_EMAILJS_TEMPLATE_ID: ${{ vars.VITE_EMAILJS_TEMPLATE_ID }}
         run: |
           set -euo pipefail
           IMAGE_URI="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${ARTIFACT_REPO}/${CLOUD_RUN_SERVICE}:${GITHUB_SHA}"
