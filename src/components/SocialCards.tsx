@@ -8,7 +8,7 @@ const socials = [
     icon: FaLinkedin,
     color: "#0A66C2",
     // TODO: Replace with your actual LinkedIn URL
-    url: "https://linkedin.com/in/seu-perfil",
+    url: "https://www.linkedin.com/in/lenon-aquino-de-souza-5a94b1258/",
   },
   {
     name: "GitHub",
@@ -16,7 +16,7 @@ const socials = [
     icon: FaGithub,
     color: "#ffffff",
     // TODO: Replace with your actual GitHub URL
-    url: "https://github.com/seu-usuario",
+    url: "https://github.com/LenoXz",
   },
   {
     name: "Instagram",
@@ -24,7 +24,7 @@ const socials = [
     icon: FaInstagram,
     color: null, // uses gradient
     // TODO: Replace with your actual Instagram URL
-    url: "https://instagram.com/seu-usuario",
+    url: "https://instagram.com/lenon.csv",
   },
 ];
 
